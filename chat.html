@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+
+<body class="chat-page light-mode">
+    <header id="chat-greeting"></header>
+    <div class="chat-content">
+        <div class="message user">Hello!</div>
+        <div class="message bot">Hi there! How can I assist you today?</div>
+    </div>
+    <footer>
+        <input type="text" placeholder="Message" class="message-input">
+        <button class="submit-button">Submit</button>
+    </footer>
+    <button class="dark-mode-toggle">Toggle Dark Mode</button>
+    <script type="module">
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js"
+        Chatbot.init({
+            chatflowid: "379d02e4-b50c-459f-b0c0-b63ecdf8fcee",
+            apiHost: "https://flowiseai-yt-6w62.onrender.com",
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Function to get a greeting based on the time of day
+            function getTimeBasedGreeting() {
+                const now = new Date();
+                const hours = now.getHours();
+                if (hours < 12) return "Good Morning";
+                if (hours < 18) return "Good Afternoon";
+                return "Good Evening";
+            }
+
+            // Function to display the greeting on the chat page
+            const chatGreeting = document.getElementById('chat-greeting');
+            if (chatGreeting) {
+                chatGreeting.textContent = getTimeBasedGreeting() + ", User!";
+            }
+
+            // Handle user input and bot response
+            const inputField = document.querySelector('.message-input');
+            const submitButton = document.querySelector('.submit-button');
+            const chatContent = document.querySelector('.chat-content');
+
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message', sender);
+                messageDiv.textContent = text;
+                chatContent.appendChild(messageDiv);
+                chatContent.scrollTop = chatContent.scrollHeight;
+            }
+
+            async function processInput() {
+                if (inputField.value.trim() !== '') {
+                    const userMessage = inputField.value.trim();
+                    addMessage(userMessage, 'user');
+                    inputField.value = '';
+
+                    try {
+                        const response = await Chatbot.sendMessage(userMessage);
+                        addMessage(response, 'bot');
+                    } catch (error) {
+                        addMessage("Sorry, something went wrong. Please try again later.", 'bot');
+                    }
+                }
+            }
+
+            if (inputField && chatContent) {
+                inputField.addEventListener('keypress', function (event) {
+                    if (event.key === 'Enter') {
+                        processInput();
+                    }
+                });
+
+                submitButton.addEventListener('click', processInput);
+            }
+
+            // Dark mode toggle
+            const darkModeToggle = document.querySelector('.dark-mode-toggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function () {
+                    document.body.classList.toggle('dark-mode');
+                    document.body.classList.toggle('light-mode');
+                    const backgroundImage = document.body.classList.contains('dark-mode') ?
+                        "url('https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fnight%2F&psig=AOvVaw0FQ4-vFNlJHD4X0JgOPcI5&ust=1720696874156000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCOjkwMKtnIcDFQAAAAAdAAAAABAE')" :
+                        "url('https://images.hdqwalls.com/wallpapers/mountain-scenery-morning-sun-rays-4k-kf.jpg')";
+                    document.body.style.backgroundImage = backgroundImage;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spiritual AI Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="chat-page light-mode">
+    <header id="chat-greeting"></header>
+    <div class="chat-content">
+        <div class="message user">Hello!</div>
+        <div class="message bot">Hi there! How can I assist you today?</div>
+    </div>
+    <footer>
+        <input type="text" placeholder="Message" class="message-input">
+        <button class="submit-button">Submit</button>
+    </footer>
+    <button class="dark-mode-toggle">Toggle Dark Mode</button>
+    <script type="module">
+        import Chatbot from "https://cdn.jsdelivr.net/npm/flowise-embed/dist/web.js";
+        document.getElementById('chat-link').addEventListener('click', () => {
+            Chatbot.init({
+                chatflowid: "9bfb6723-c438-4d17-a41c-fb20f5582960",
+                apiHost: "http://localhost:3000",
+            });
+        });
+    </script>
+    <script src="scripts.js"></script>
+</body>
+</html> -->
